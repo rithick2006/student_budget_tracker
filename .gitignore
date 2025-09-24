@@ -1,0 +1,7 @@
+venv/
+__pycache__/
+budget.db
+*.pyc
+.env
+.DS_Store
+instance/

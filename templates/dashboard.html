@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row">
+  <div class="col-md-8">
+    <h3>Dashboard</h3>
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5>Total Spent:</h5>
+        <h2>₹ {{ '{:.2f}'.format(total) }}</h2>
+      </div>
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-body">
+        <canvas id="categoryChart" width="400" height="200"></canvas>
+      </div>
+    </div>
+
+    <h5>Recent Transactions</h5>
+    <ul class="list-group mb-3">
+      {% for r in recent %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <strong>{{ r.category }}</strong> — {{ r.note or 'No note' }}<br>
+            <small class="text-muted">{{ r.date.strftime('%Y-%m-%d') }}</small>
+          </div>
+          <div>₹ {{ '{:.2f}'.format(r.amount) }}</div>
+        </li>
+      {% else %}
+        <li class="list-group-item">No recent transactions</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="col-md-4">
+    <h5>Quick Actions</h5>
+    <a href="{{ url_for('add_expense') }}" class="btn btn-success mb-2">Add Expense</a>
+    <a href="{{ url_for('expenses') }}" class="btn btn-secondary mb-2">View All</a>
+    <a href="{{ url_for('export_expenses') }}" class="btn btn-outline-primary">Export CSV</a>
+  </div>
+</div>
+
+<script>
+  const categories = {{ categories | tojson }};
+  const sums = {{ sums | tojson }};
+
+  if (!categories.length) {
+    fetch("{{ url_for('category_summary') }}")
+      .then(r => r.json()).then(data => {
+        const cats = Object.keys(data);
+        const vals = Object.values(data);
+        renderChart(cats, vals);
+      });
+  } else {
+    renderChart(categories, sums);
+  }
+
+  function renderChart(labels, data) {
+    const ctx = document.getElementById('categoryChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: labels,
+        datasets: [{ label: 'Spending', data: data }]
+      },
+      options: { responsive: true }
+    });
+  }
+</script>
+{% endblock %}

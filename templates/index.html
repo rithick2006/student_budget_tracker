@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="text-center">
+  <h1 class="mt-5">Student Budget Tracker</h1>
+  <p class="lead">Track your spending, visualize categories, and stay on budget.</p>
+  <p>
+    <a class="btn btn-primary" href="{{ url_for('register') }}">Get Started</a>
+    <a class="btn btn-outline-primary" href="{{ url_for('login') }}">Login</a>
+  </p>
+</div>
+{% endblock %}

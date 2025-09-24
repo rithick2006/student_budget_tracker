@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row">
+  <div class="col-md-6">
+    <h3>Edit Expense</h3>
+    <form method="post">
+      <div class="mb-3">
+        <label>Date</label>
+        <input name="date" type="date" class="form-control" required value="{{ e.date.strftime('%Y-%m-%d') }}">
+      </div>
+      <div class="mb-3">
+        <label>Category</label>
+        <select name="category" class="form-select" required>
+          {% for c in ['Food','Travel','Entertainment','Study','Misc'] %}
+            <option value="{{ c }}" {% if e.category==c %}selected{% endif %}>{{ c }}</option
